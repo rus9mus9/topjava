@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * GKislin
@@ -26,39 +27,31 @@ public class UserMealsUtil
                 new UserMeal(LocalDateTime.of(2015, Month.MAY, 31,13,0), "Обед", 500),
                 new UserMeal(LocalDateTime.of(2015, Month.MAY, 31,20,0), "Ужин", 510)
         );
-        getFilteredWithExceeded(mealList, LocalTime.of(7, 0), LocalTime.of(12,0), 2000);
+        List<UserMealWithExceed> filteredWithExceeded = getFilteredWithExceeded(mealList, LocalTime.of(7, 0), LocalTime.of(12, 0), 2000);
 //        .toLocalDate();
 //        .toLocalTime();
     }
 
     public static List<UserMealWithExceed>  getFilteredWithExceeded(List<UserMeal> mealList, LocalTime startTime, LocalTime endTime, int caloriesPerDay)
     {
-        List<UserMealWithExceed> exceedList = new ArrayList<>();
-        Map<Integer, Integer> dayAndCal = new HashMap<>();
-
-        for(UserMeal userMeal : mealList)
+        Map<LocalDate, Integer> caloriesSumPerDate = new HashMap<>();
+        for(UserMeal meal : mealList)
         {
-            if(dayAndCal.containsKey(userMeal.getDateTime().toLocalDate().getDayOfMonth()))
-            {
-                dayAndCal.put(userMeal.getDateTime().toLocalDate().getDayOfMonth(), dayAndCal.get(userMeal.getDateTime().toLocalDate().getDayOfMonth()) + userMeal.getCalories());
-            }
-            else dayAndCal.put(userMeal.getDateTime().toLocalDate().getDayOfMonth(), userMeal.getCalories());
-
+            LocalDate mealDate = meal.getDateTime().toLocalDate();
+            caloriesSumPerDate.put(mealDate, caloriesSumPerDate.getOrDefault(mealDate, 0) + meal.getCalories());
         }
 
-        for(Map.Entry<Integer, Integer> entry : dayAndCal.entrySet())
+        List<UserMealWithExceed> mealExceeded = new ArrayList<>();
+        for(UserMeal meal : mealList)
         {
-            for(UserMeal userMeal : mealList)
+            LocalDateTime dateTime = meal.getDateTime();
+            if(TimeUtil.isBetween(dateTime.toLocalTime(), startTime, endTime))
             {
-                if(TimeUtil.isBetween(userMeal.getDateTime().toLocalTime(), startTime, endTime) && entry.getKey() == userMeal.getDateTime().getDayOfMonth())
-                {
-                    exceedList.add(new UserMealWithExceed(userMeal.getDateTime(), userMeal.getDescription(), entry.getValue(), entry.getValue() > caloriesPerDay));
-                }
+                mealExceeded.add(new UserMealWithExceed(dateTime, meal.getDescription(), meal.getCalories(),
+                        caloriesSumPerDate.get(dateTime.toLocalDate()) > caloriesPerDay));
             }
         }
-
-        // P.S Решение деревенское, я сам им недоволен. Буду переделывать и осваивать Stream API
-        return exceedList;
+        return mealExceeded;
     }
 }
 
