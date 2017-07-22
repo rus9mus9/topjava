@@ -3,31 +3,33 @@
 <html>
 <head>
     <title>Title</title>
+    <style>
+       .normal {color: green;}
+       .exceeded {color: red;}
+    </style>
 </head>
 <body>
+<section>
 <h3><a href="index.html">Home</a></h3>
 <h2>Meals</h2>
 <table border="1" cellpadding="8" cellspacing="0">
+    <thead>
 <tr>
+    <th>Date</th>
     <th>Description</th>
     <th>Calories</th>
-    <th>Time</th>
 </tr>
-<c:forEach items="${mealList}" var="mealWithExceedList">
-    <tr>
-        <c:if test="${mealWithExceedList.isExceed()}">
-        <td style="color:#ff0000">${mealWithExceedList.getDescription()}"</td>
-        <td style="color:#ff0000">"${mealWithExceedList.getCalories()}"</td>
-        <td style="color:#ff0000">"${mealWithExceedList.getFormattedDate()}"</td>
-        </c:if>
-        <c:if test="${!mealWithExceedList.isExceed()}">
-            <td style="color:#009933">${mealWithExceedList.getDescription()}"</td>
-            <td style="color:#009933">"${mealWithExceedList.getCalories()}"</td>
-            <td style="color:#009933">"${mealWithExceedList.getFormattedDate()}"</td>
-        </c:if>
+</thead>
+<c:forEach items="${mealList}" var="meal">
+    <jsp:useBean id="meal" scope="page" type="ru.javawebinar.topjava.model.MealWithExceed"/>
+    <tr class="${meal.exceed ? 'exceeded' : 'normal'}">
+        <td>${meal.formattedDate}</td>
+        <td>${meal.description}</td>
+        <td>${meal.calories}</td>
     </tr>
 </c:forEach>
 </table>
+</section>
 </body>
 </html>
 
