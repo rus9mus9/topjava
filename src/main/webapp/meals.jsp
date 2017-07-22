@@ -7,7 +7,7 @@
 <body>
 <h3><a href="index.html">Home</a></h3>
 <h2>Meals</h2>
-<table>
+<table border="1" cellpadding="8" cellspacing="0">
 <tr>
     <th>Description</th>
     <th>Calories</th>
