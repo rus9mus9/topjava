@@ -18,6 +18,7 @@ public class DataJpaMealRepositoryImpl implements MealRepository {
     private CrudUserRepository crudUserRepository;
 
     @Override
+    @Transactional
     public Meal save(Meal meal, int userId)
     {
         User user = crudUserRepository.getOne(userId);
