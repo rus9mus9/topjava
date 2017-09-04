@@ -67,7 +67,6 @@ public class MealController
     @RequestMapping(value = "/meals", params = {"action=update"} , method = RequestMethod.GET)
     public String editMeal(HttpServletRequest request, Model model)
     {
-       System.out.println("In edit method");
        model.addAttribute("meal", service.get(Integer.valueOf(request.getParameter("id")), AuthorizedUser.id()));
        return "mealForm";
     }
