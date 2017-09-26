@@ -4,6 +4,7 @@ package ru.javawebinar.topjava.util;
 import ru.javawebinar.topjava.HasId;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
+
 public class ValidationUtil {
 
     private ValidationUtil() {
@@ -42,4 +43,5 @@ public class ValidationUtil {
             throw new IllegalArgumentException(bean + " must be with id=" + id);
         }
     }
+
 }
