@@ -98,6 +98,16 @@ public class MealRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    public void testValidation() throws Exception
+    {
+        mockMvc.perform(post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(INVALID_MEAL))
+                .with(userHttpBasic(ADMIN)))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
     public void testGetAll() throws Exception {
         mockMvc.perform(get(REST_URL)
                 .with(userHttpBasic(USER)))

@@ -110,6 +110,15 @@ public class AdminRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    public void testValidation() throws Exception
+    {
+        mockMvc.perform(post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(ADMIN))
+                .content(JSON_INVALID_USER)).andExpect(status().is4xxClientError());
+    }
+
+    @Test
     public void testGetAll() throws Exception {
         TestUtil.print(mockMvc.perform(get(REST_URL)
                 .with(userHttpBasic(ADMIN)))
